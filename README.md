@@ -1,2 +1,2 @@
 # capstoneproject28
-1. Create a respontories and invite my teammate in it. 
+1. Create a respontory and invite my teammate in it. 
