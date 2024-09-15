@@ -1,24 +1,40 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract IoTDataManager {
-    struct IoTData {
-        string deviceId;
-        string data;
-        uint timestamp;
+contract SimpleDataStorage {
+
+    // Structure to store data
+    struct DataEntry {
+        string data;          // The actual data (could be a string)
+        address uploader;     // Address of the user who uploaded the data
+        uint256 timestamp;    // The timestamp when the data was uploaded
     }
 
-    mapping(string => IoTData) private dataRecords;
+    // Mapping to store data with a unique ID
+    mapping(uint256 => DataEntry) private dataStore;
 
-    event DataAdded(string deviceId, string data, uint timestamp);
+    // Event emitted when data is successfully stored
+    event DataStored(uint256 dataId, address uploader, uint256 timestamp);
 
-    function addData(string memory deviceId, string memory data) public {
-        dataRecords[deviceId] = IoTData(deviceId, data, block.timestamp);
-        emit DataAdded(deviceId, data, block.timestamp);
+    // Function to store data, mapped by a unique ID
+    function storeData(uint256 dataId, string memory data) public {
+        require(bytes(data).length > 0, "Data cannot be empty");
+        require(dataStore[dataId].timestamp == 0, "Data with this ID already exists");
+
+        dataStore[dataId] = DataEntry({
+            data: data,
+            uploader: msg.sender,
+            timestamp: block.timestamp
+        });
+
+        emit DataStored(dataId, msg.sender, block.timestamp);
     }
 
-    function getData(string memory deviceId) public view returns (string memory data, uint timestamp) {
-        IoTData memory record = dataRecords[deviceId];
-        return (record.data, record.timestamp);
+    // Function to retrieve data by its unique ID
+    function retrieveData(uint256 dataId) public view returns (string memory data, address uploader, uint256 timestamp) {
+        require(dataStore[dataId].timestamp != 0, "Data not found");
+
+        DataEntry memory entry = dataStore[dataId];
+        return (entry.data, entry.uploader, entry.timestamp);
     }
 }
