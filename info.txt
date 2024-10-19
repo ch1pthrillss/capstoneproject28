@@ -1,0 +1,14 @@
+node 1 = 0x09524ACAE386D97f777fBD40D6A851E2A0c31a26
+password = 12345
+
+node 2 = 0x32FD0BD3c919254cb6456694A5B8E88b1785CA26
+password = 12345
+
+enode://bd61944681694bf3d17b25e80e83c9fc8be07594994bb6d225e92b3b0531bc448c66ab52f325a9ee5750749e0eceefbbe5b5e2c8cc36df82691d9a0e4004f4c1@127.0.0.1:0?discport=30301
+
+
+To start node1 >   
+geth --datadir "./data"  --port 30304 --bootnodes enode://bd61944681694bf3d17b25e80e83c9fc8be07594994bb6d225e92b3b0531bc448c66ab52f325a9ee5750749e0eceefbbe5b5e2c8cc36df82691d9a0e4004f4c1@127.0.0.1:0?discport=30301 --authrpc.port 8547 --ipcdisable --allow-insecure-unlock  --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,debug,personal,net --networkid 12345678 --unlock 0x09524ACAE386D97f777fBD40D6A851E2A0c31a26 --password password.txt --mine --miner.etherbase=0x09524ACAE386D97f777fBD40D6A851E2A0c31a26
+
+To start node2 > 
+geth --datadir "./data"  --port 30306 --bootnodes enode://bd61944681694bf3d17b25e80e83c9fc8be07594994bb6d225e92b3b0531bc448c66ab52f325a9ee5750749e0eceefbbe5b5e2c8cc36df82691d9a0e4004f4c1@127.0.0.1:0?discport=30301  -authrpc.port 8546 --networkid 12345678 --unlock 0x32FD0BD3c919254cb6456694A5B8E88b1785CA26 --password password.txt
