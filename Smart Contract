@@ -1,11 +1,16 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract MySmartContract {
     address public owner;
     mapping(address => uint) public balances;
 
+    // Store notes for each address
+    mapping(address => string[]) public notes;
+
     event Deposit(address indexed user, uint amount);
     event Withdraw(address indexed user, uint amount);
+    event NoteAdded(address indexed user, string note);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not the contract owner");
@@ -24,8 +29,14 @@ contract MySmartContract {
 
     function withdraw(uint amount) public {
         require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        // Update balance before the transfer to prevent reentrancy
         balances[msg.sender] -= amount;
-        payable(msg.sender).transfer(amount);
+
+        // Transfer Ether
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "Transfer failed");
+
         emit Withdraw(msg.sender, amount);
     }
 
@@ -33,6 +44,19 @@ contract MySmartContract {
         return balances[msg.sender];
     }
 
-    function upgrade() public onlyOwner {
+    function addNote(string memory note) public {
+        notes[msg.sender].push(note);
+        emit NoteAdded(msg.sender, note);
+    }
+
+    function getNotes() public view returns (string[] memory) {
+        return notes[msg.sender];
+    }
+
+    function upgrade(address newContract) public onlyOwner {
+        // Logic for upgrading the contract
+        // This could involve deploying a new contract and migrating funds
+        require(newContract != address(0), "Invalid address");
+        // Additional logic may be implemented as per specific requirements
     }
 }
