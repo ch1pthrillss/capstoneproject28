@@ -33,8 +33,6 @@ contract MySmartContract {
         return balances[msg.sender];
     }
 
-    // Chức năng nâng cấp (cần thiết kế thêm)
     function upgrade() public onlyOwner {
-        // Logic nâng cấp tại đây
     }
 }
